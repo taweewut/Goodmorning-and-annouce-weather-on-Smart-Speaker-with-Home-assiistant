@@ -1,0 +1,50 @@
+alias: Good Morning
+description: Good morning say weather forecast
+trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_living_room_occupancy
+    from: 'off'
+    to: 'on'
+condition:
+  - condition: time
+    before: '09:00:00'
+    after: '04:30:00'
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+      - sat
+      - sun
+action:
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.living_room_speaker
+      language: th
+      message: >-
+        Good Morning Taweewut สวัสดีตอนเช้า สภาพอากาศวันนี้
+        {{states("weather.mhuhome")}}  ปริมาณผุ่นละอองพีเอ็มสองจุดห้า
+        {{states("sensor.mi_air_purifier_3_3h_pm2_5")}}ไมโครกรัมต่อลูกบาศก์เมตร
+        อุณหภูมิ  {{state_attr("weather.mhuhome","temperature")}} องศาเซลเซียส
+        เปอร์เซ็นความชื้นในอากาศ {{state_attr("weather.mhuhome","humidity")}} 
+        เปอร์เซนต์ ความดันบรรยากาศ  
+        {{state_attr("weather.mhuhome","pressure")}} ปาสคาล และ
+        โอกาศความน่าจะเป็นที่ฝนจะตก      
+        {{state_attr("weather.mhuhome","forecast")[0].precipitation_probability
+        }} เปอร์เซนต์
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.living_room_speaker
+      language: en
+      message: >-
+        Good Morning Taweewut Today weather {{states("weather.mhuhome")}}  Air
+        Quality PM2.5 is
+        {{states("sensor.mi_air_purifier_3_3h_pm2_5")}}Microgram per
+        squaremetres Temperature {{state_attr("weather.mhuhome","temperature")}}
+        Celcius Humidity {{state_attr("weather.mhuhome","humidity")}} Percent
+        Air Pressure  {{state_attr("weather.mhuhome","pressure")}} Pascal and
+        Rain probability is      
+        {{state_attr("weather.mhuhome","forecast")[0].precipitation_probability
+        }} Percent
+mode: single
